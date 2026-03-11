@@ -26,13 +26,6 @@
             <span class="conv-name">{{ user.login }}</span>
             <span class="conv-date">{{ chat.activeUser?.id === user.id ? 'Now' : '' }}</span>
           </div>
-          <div class="conv-bottom">
-            <span class="conv-preview">Click to open chat</span>
-            <span
-              v-if="chat.activeUser?.id === user.id"
-              class="conv-dot blue"
-            ></span>
-          </div>
         </div>
       </div>
     </div>
