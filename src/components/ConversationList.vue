@@ -1,7 +1,22 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useChatStore } from '@/stores/chat'
+import type { User } from '@/entities/user'
+import { initials, avatarColor } from '@/shared/lib/avatar'
+
+defineEmits<{ select: [user: User] }>()
+
+const auth = useAuthStore()
+const chat = useChatStore()
+
+const filteredUsers = computed(() => chat.users.filter((u) => u.id !== auth.userId))
+</script>
+
 <template>
   <div class="conv-list">
     <div class="conv-header">
-      <h2>Conversations</h2>
+      <h2>Чаты</h2>
     </div>
 
     <div class="conv-tabs">
@@ -32,33 +47,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useAuthStore } from '../stores/auth'
-import { useChatStore } from '../stores/chat'
-import type { User } from '../api/users'
-
-defineEmits<{ select: [user: User] }>()
-
-const auth = useAuthStore()
-const chat = useChatStore()
-
-const filteredUsers = computed(() =>
-  chat.users.filter((u) => u.id !== auth.userId)
-)
-
-function initials(name: string): string {
-  return name.slice(0, 2).toUpperCase()
-}
-
-function avatarColor(name: string): string {
-  const colors = ['#e74c3c', '#3498db', '#9b59b6', '#f39c12', '#1abc9c', '#e67e22', '#2980b9', '#16a085']
-  let hash = 0
-  for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffff
-  return colors[hash % colors.length]
-}
-</script>
-
 <style scoped>
 .conv-list {
   width: 280px;
@@ -83,7 +71,7 @@ function avatarColor(name: string): string {
   display: flex;
   gap: 4px;
   padding: 8px 12px 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .tab {
@@ -93,7 +81,9 @@ function avatarColor(name: string): string {
   font-weight: 500;
   color: #8892a4;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   white-space: nowrap;
 }
 
@@ -181,34 +171,5 @@ function avatarColor(name: string): string {
   color: #5a6480;
   flex-shrink: 0;
   margin-left: 8px;
-}
-
-.conv-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.conv-preview {
-  font-size: 0.75rem;
-  color: #5a6480;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.conv-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.conv-dot.blue {
-  background: #3b82f6;
-}
-
-.conv-dot.green {
-  background: #22c55e;
 }
 </style>

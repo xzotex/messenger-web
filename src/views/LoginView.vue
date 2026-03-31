@@ -1,40 +1,8 @@
-<template>
-  <div class="login-page">
-    <div class="login-card">
-      <div class="login-logo">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-          <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" fill="white"/>
-        </svg>
-      </div>
-      <h1>Messenger</h1>
-      <p class="subtitle">Sign in to your account</p>
-
-      <div class="fields">
-        <div class="field">
-          <label>Login</label>
-          <input v-model="loginVal" placeholder="Enter your login" autocomplete="username" />
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <input v-model="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
-        </div>
-      </div>
-
-      <p v-if="error" class="error">{{ error }}</p>
-
-      <div class="actions">
-        <button class="btn-primary" @click="doLogin">Sign in</button>
-        <button class="btn-secondary" @click="doRegister">Create account</button>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { login as apiLogin, register as apiRegister } from '../api/auth'
-import { useAuthStore } from '../stores/auth'
+import { login as apiLogin, register as apiRegister } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -67,6 +35,46 @@ async function doRegister() {
 }
 </script>
 
+<template>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
+            fill="white"
+          />
+        </svg>
+      </div>
+      <h1>Messenger</h1>
+      <p class="subtitle">Sign in to your account</p>
+
+      <div class="fields">
+        <div class="field">
+          <label>Login</label>
+          <input v-model="loginVal" placeholder="Enter your login" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+        </div>
+      </div>
+
+      <p v-if="error" class="error">{{ error }}</p>
+
+      <div class="actions">
+        <button class="btn-primary" @click="doLogin">Sign in</button>
+        <button class="btn-secondary" @click="doRegister">Create account</button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 .login-page {
   min-height: 100vh;
@@ -87,7 +95,7 @@ async function doRegister() {
   flex-direction: column;
   align-items: center;
   gap: 0;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .login-logo {
@@ -195,7 +203,9 @@ input:focus {
   font-size: 0.9rem;
   font-weight: 500;
   border: 1px solid #2d3a56;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
 .btn-secondary:hover {

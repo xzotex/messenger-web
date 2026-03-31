@@ -1,19 +1,21 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { User } from '../api/users'
-import type { Message } from '../api/messages'
+import type { User } from '@/entities/user'
+import type { Message } from '@/entities/message'
 
 export const useChatStore = defineStore('chat', () => {
   const users = ref<User[]>([])
   const activeUser = ref<User | null>(null)
+  const activeChatId = ref<string | null>(null)
   const messages = ref<Message[]>([])
 
   function setUsers(list: User[]) {
     users.value = list
   }
 
-  function setActiveUser(user: User) {
+  function setActiveUser(user: User, chatId: string) {
     activeUser.value = user
+    activeChatId.value = chatId
     messages.value = []
   }
 
@@ -25,5 +27,14 @@ export const useChatStore = defineStore('chat', () => {
     messages.value.push(msg)
   }
 
-  return { users, activeUser, messages, setUsers, setActiveUser, setMessages, addMessage }
+  return {
+    users,
+    activeUser,
+    activeChatId,
+    messages,
+    setUsers,
+    setActiveUser,
+    setMessages,
+    addMessage,
+  }
 })

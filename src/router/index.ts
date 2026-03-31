@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import ChatView from '../views/ChatView.vue'
+import LoginView from '@/views/LoginView.vue'
+import ChatView from '@/views/ChatView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -10,7 +11,8 @@ const router = createRouter({
       path: '/chat',
       component: ChatView,
       beforeEnter: () => {
-        if (!localStorage.getItem('token')) return '/'
+        const auth = useAuthStore()
+        if (!auth.token) return '/'
       },
     },
   ],

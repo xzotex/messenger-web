@@ -1,5 +1,28 @@
+<script setup lang="ts">
+import { ref, computed, watch, nextTick } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { useChatStore } from '@/stores/chat'
+import { initials, avatarColor } from '@/shared/lib/avatar'
+import { formatTime } from '@/shared/lib/format'
+
+const auth = useAuthStore()
+const chat = useChatStore()
+const listEl = ref<HTMLElement | null>(null)
+
+const senderMap = computed(() => Object.fromEntries(chat.users.map((u) => [u.id, u.login])))
+
+function senderLogin(senderId: string): string {
+  return senderMap.value[senderId] ?? senderId.slice(0, 6)
+}
+
+watch(
+  () => chat.messages.length,
+  () => nextTick(() => listEl.value?.scrollTo(0, listEl.value.scrollHeight))
+)
+</script>
+
 <template>
-  <div class="message-list" ref="listEl">
+  <div ref="listEl" class="message-list">
     <template v-if="chat.messages.length === 0">
       <div class="empty-chat">
         <p>No messages yet. Say hello!</p>
@@ -29,42 +52,6 @@
     </template>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
-import { useAuthStore } from '../stores/auth'
-import { useChatStore } from '../stores/chat'
-
-const auth = useAuthStore()
-const chat = useChatStore()
-const listEl = ref<HTMLElement | null>(null)
-
-function initials(name: string): string {
-  return name.slice(0, 2).toUpperCase()
-}
-
-function avatarColor(name: string): string {
-  const colors = ['#e74c3c', '#3498db', '#9b59b6', '#f39c12', '#1abc9c', '#e67e22', '#2980b9', '#16a085']
-  let hash = 0
-  for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffff
-  return colors[hash % colors.length]!
-}
-
-function senderLogin(senderId: string): string {
-  const user = chat.users.find(u => u.id === senderId)
-  return user ? user.login : senderId.slice(0, 6)
-}
-
-function formatTime(iso: string): string {
-  const d = new Date(iso)
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
-
-watch(
-  () => chat.messages.length,
-  () => nextTick(() => listEl.value?.scrollTo(0, listEl.value.scrollHeight))
-)
-</script>
 
 <style scoped>
 .message-list {
@@ -97,7 +84,6 @@ watch(
   font-size: 0.9rem;
 }
 
-/* Message rows */
 .message-row {
   display: flex;
   align-items: flex-end;

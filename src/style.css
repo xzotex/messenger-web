@@ -5,7 +5,11 @@
 }
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -37,7 +41,8 @@ button {
   outline: none;
 }
 
-input, textarea {
+input,
+textarea {
   font-family: inherit;
   outline: none;
   border: none;
