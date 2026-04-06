@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
 import { useAuthStore } from '@/stores/auth'
@@ -9,13 +9,20 @@ import ConversationList from '@/components/ConversationList.vue'
 import ChatHeader from '@/components/ChatHeader.vue'
 import MessageList from '@/components/MessageList.vue'
 import MessageInput from '@/components/MessageInput.vue'
+import CreateGroupModal from '@/components/CreateGroupModal.vue'
 import type { User } from '@/entities/user'
+import type { Chat } from '@/entities/chat'
 
 const chat = useChatStore()
 const auth = useAuthStore()
 const router = useRouter()
 const showLogout = ref(false)
-const { init, selectUser: chatSelectUser, disconnect } = useChat()
+const showCreateGroup = ref(false)
+const { init, selectUser: chatSelectUser, selectGroup: chatSelectGroup, createGroup, disconnect } = useChat()
+
+const isActive = computed(() => chat.activeUser || chat.activeGroup)
+const activeName = computed(() => chat.activeUser?.login ?? chat.activeGroup?.name ?? '')
+const isGroup = computed(() => !!chat.activeGroup)
 
 function doLogout() {
   disconnect()
@@ -28,16 +35,30 @@ async function selectUser(user: User) {
   await chatSelectUser(user)
 }
 
+async function selectGroup(group: Chat) {
+  showLogout.value = false
+  await chatSelectGroup(group)
+}
+
+async function handleCreateGroup(name: string, userIds: string[]) {
+  showCreateGroup.value = false
+  await createGroup(name, userIds)
+}
+
 onMounted(init)
 </script>
 
 <template>
   <div class="chat-layout">
     <AppSidebar />
-    <ConversationList @select="selectUser" />
+    <ConversationList
+      @select="selectUser"
+      @select-group="selectGroup"
+      @open-create-group="showCreateGroup = true"
+    />
 
     <div class="chat-panel">
-      <div v-if="!chat.activeUser" class="chat-empty">
+      <div v-if="!isActive" class="chat-empty">
         <div class="chat-empty-icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
             <path
@@ -52,7 +73,8 @@ onMounted(init)
 
       <template v-else>
         <ChatHeader
-          :user="chat.activeUser"
+          :name="activeName"
+          :is-group="isGroup"
           :show-menu="showLogout"
           @menu="showLogout = !showLogout"
           @logout="doLogout"
@@ -61,6 +83,12 @@ onMounted(init)
         <MessageInput />
       </template>
     </div>
+
+    <CreateGroupModal
+      v-if="showCreateGroup"
+      @create="handleCreateGroup"
+      @close="showCreateGroup = false"
+    />
   </div>
 </template>
 
@@ -76,7 +104,7 @@ onMounted(init)
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: #814cb9;
   overflow: hidden;
   position: relative;
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { initials, avatarColor } from '@/shared/lib/avatar'
+import DevilIcon from "@/assets/icons/DevilIcon.vue";
 
 const auth = useAuthStore()
 </script>
@@ -8,12 +9,7 @@ const auth = useAuthStore()
 <template>
   <div class="icon-nav">
     <div class="icon-nav-logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
-          fill="white"
-        />
-      </svg>
+      <DevilIcon />
     </div>
 
     <div class="icon-nav-items">
@@ -83,7 +79,6 @@ const auth = useAuthStore()
 .icon-nav-logo {
   width: 38px;
   height: 38px;
-  background: #c0392b;
   border-radius: 10px;
   display: flex;
   align-items: center;

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { User } from '@/entities/user'
 import { initials, avatarColor } from '@/shared/lib/avatar'
 
 defineProps<{
-  user: User
+  name: string
+  isGroup?: boolean
   showMenu: boolean
 }>()
 
@@ -15,11 +15,12 @@ defineEmits<{
 
 <template>
   <div class="chat-header">
-    <div class="chat-header-avatar" :style="{ background: avatarColor(user.login) }">
-      {{ initials(user.login) }}
+    <div class="chat-header-avatar" :style="{ background: avatarColor(name) }">
+      {{ initials(name) }}
     </div>
     <div class="chat-header-info">
-      <span class="chat-header-name">{{ user.login }}</span>
+      <span class="chat-header-name">{{ name }}</span>
+      <span v-if="isGroup" class="chat-header-type">группа</span>
     </div>
     <div class="chat-header-actions">
       <button class="header-btn" title="Search">
@@ -68,12 +69,20 @@ defineEmits<{
 
 .chat-header-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .chat-header-name {
   font-size: 0.95rem;
   font-weight: 600;
   color: #111827;
+}
+
+.chat-header-type {
+  font-size: 0.72rem;
+  color: #9ca3af;
 }
 
 .chat-header-actions {

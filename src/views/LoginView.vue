@@ -29,8 +29,12 @@ async function doRegister() {
     const token = await apiLogin(loginVal.value, password.value)
     auth.setToken(token)
     router.push('/chat')
-  } catch {
-    error.value = 'Registration failed. Login may already be taken.'
+  } catch (e: any) {
+    if (e?.response?.status === 409) {
+      error.value = 'Пользователь с таким логином уже существует'
+    } else {
+      error.value = 'Ошибка регистрации'
+    }
   }
 }
 </script>
